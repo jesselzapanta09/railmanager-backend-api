@@ -1,93 +1,103 @@
-const express = require('express');
-const router = express.Router();
-const db = require('../config/database');
-const authenticateToken = require('../middleware/auth');
+const express = require('express')
+const router = express.Router()
+const path = require('path')
+const fs = require('fs')
+const db = require('../config/database')
+const { authenticateToken, requireAdmin } = require('../middleware/auth')
+const { uploadTrain } = require('../utils/upload')
 
-// POST /api/train - Create a new train
-router.post('/', authenticateToken, async (req, res) => {
-    const { train_name, price, route } = req.body;
-    if (!train_name || !price || !route) {
-        return res.status(400).json({ success: false, message: 'All fields required' });
-    }
-    try {
-        const [result] = await db.query(
-            'INSERT INTO trains (train_name, price, route) VALUES (?, ?, ?)',
-            [train_name, price, route]
-        );
-        res.status(201).json({
-            success: true, message: 'Train created successfully',
-            data: { id: result.insertId, train_name, price, route }
-        });
-    } catch (err) {
-        res.status(500).json({ success: false, message: 'Server error', error: err.message });
-    }
-});
-
-// GET /api/train - Get all trains
+// GET /api/train
 router.get('/', authenticateToken, async (req, res) => {
     try {
-        const [trains] = await db.query('SELECT * FROM trains ORDER BY created_at DESC');
-        res.status(200).json({
-            success: true, message: 'Trains retrieved successfully',
-            count: trains.length, data: trains
-        });
+        const [trains] = await db.query('SELECT * FROM trains ORDER BY created_at DESC')
+        res.status(200).json({ success: true, count: trains.length, data: trains })
     } catch (err) {
-        res.status(500).json({ success: false, message: 'Server error', error: err.message });
+        res.status(500).json({ success: false, message: 'Server error', error: err.message })
     }
-});
+})
 
-// GET /api/train/:id - Get single train
+// GET /api/train/:id
 router.get('/:id', authenticateToken, async (req, res) => {
-    const { id } = req.params;
     try {
-        const [trains] = await db.query('SELECT * FROM trains WHERE id = ?', [id]);
-        if (trains.length === 0) {
-            return res.status(404).json({ success: false, message: 'Train not found' });
-        }
-        res.status(200).json({ success: true, data: trains[0] });
+        const [trains] = await db.query('SELECT * FROM trains WHERE id = ?', [req.params.id])
+        if (trains.length === 0)
+            return res.status(404).json({ success: false, message: 'Train not found' })
+        res.status(200).json({ success: true, data: trains[0] })
     } catch (err) {
-        res.status(500).json({ success: false, message: 'Server error', error: err.message });
+        res.status(500).json({ success: false, message: 'Server error', error: err.message })
     }
-});
+})
 
-// PUT /api/train/:id - Update a train
-router.put('/:id', authenticateToken, async (req, res) => {
-    const { id } = req.params;
-    const { train_name, price, route } = req.body;
-    if (!train_name || !price || !route) {
-        return res.status(400).json({ success: false, message: 'All fields required' });
-    }
+// POST /api/train (admin only)
+router.post('/', authenticateToken, requireAdmin, uploadTrain.single('image'), async (req, res) => {
+    const { train_name, price, route } = req.body
+    if (!train_name || !price || !route)
+        return res.status(400).json({ success: false, message: 'train_name, price, and route are required' })
+
+    const imageUrl = req.file ? `/uploads/trains/${req.file.filename}` : null
     try {
-        const [existing] = await db.query('SELECT id FROM trains WHERE id = ?', [id]);
-        if (existing.length === 0) {
-            return res.status(404).json({ success: false, message: 'Train not found' });
+        const [result] = await db.query(
+            'INSERT INTO trains (train_name, price, route, image) VALUES (?, ?, ?, ?)',
+            [train_name, price, route, imageUrl]
+        )
+        res.status(201).json({
+            success: true, message: 'Train created',
+            data: { id: result.insertId, train_name, price, route, image: imageUrl }
+        })
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'Server error', error: err.message })
+    }
+})
+
+// PUT /api/train/:id (admin only)
+router.put('/:id', authenticateToken, requireAdmin, uploadTrain.single('image'), async (req, res) => {
+    const { train_name, price, route } = req.body
+    if (!train_name || !price || !route)
+        return res.status(400).json({ success: false, message: 'All fields are required' })
+
+    try {
+        const [existing] = await db.query('SELECT * FROM trains WHERE id = ?', [req.params.id])
+        if (existing.length === 0)
+            return res.status(404).json({ success: false, message: 'Train not found' })
+
+        let imageUrl = existing[0].image
+        if (req.file) {
+            if (imageUrl) {
+                const old = path.join(__dirname, '..', imageUrl)
+                if (fs.existsSync(old)) fs.unlinkSync(old)
+            }
+            imageUrl = `/uploads/trains/${req.file.filename}`
         }
+
         await db.query(
-            'UPDATE trains SET train_name = ?, price = ?, route = ? WHERE id = ?',
-            [train_name, price, route, id]
-        );
+            'UPDATE trains SET train_name = ?, price = ?, route = ?, image = ? WHERE id = ?',
+            [train_name, price, route, imageUrl, req.params.id]
+        )
         res.status(200).json({
-            success: true, message: 'Train updated successfully',
-            data: { id: parseInt(id), train_name, price, route }
-        });
+            success: true, message: 'Train updated',
+            data: { id: parseInt(req.params.id), train_name, price, route, image: imageUrl }
+        })
     } catch (err) {
-        res.status(500).json({ success: false, message: 'Server error', error: err.message });
+        res.status(500).json({ success: false, message: 'Server error', error: err.message })
     }
-});
+})
 
-// DELETE /api/train/:id - Delete a train
-router.delete('/:id', authenticateToken, async (req, res) => {
-    const { id } = req.params;
+// DELETE /api/train/:id (admin only)
+router.delete('/:id', authenticateToken, requireAdmin, async (req, res) => {
     try {
-        const [existing] = await db.query('SELECT id FROM trains WHERE id = ?', [id]);
-        if (existing.length === 0) {
-            return res.status(404).json({ success: false, message: 'Train not found' });
-        }
-        await db.query('DELETE FROM trains WHERE id = ?', [id]);
-        res.status(200).json({ success: true, message: 'Train deleted successfully' });
-    } catch (err) {
-        res.status(500).json({ success: false, message: 'Server error', error: err.message });
-    }
-});
+        const [existing] = await db.query('SELECT * FROM trains WHERE id = ?', [req.params.id])
+        if (existing.length === 0)
+            return res.status(404).json({ success: false, message: 'Train not found' })
 
-module.exports = router;
+        if (existing[0].image) {
+            const p = path.join(__dirname, '..', existing[0].image)
+            if (fs.existsSync(p)) fs.unlinkSync(p)
+        }
+        await db.query('DELETE FROM trains WHERE id = ?', [req.params.id])
+        res.status(200).json({ success: true, message: 'Train deleted' })
+    } catch (err) {
+        res.status(500).json({ success: false, message: 'Server error', error: err.message })
+    }
+})
+
+module.exports = router

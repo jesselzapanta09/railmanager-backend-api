@@ -1,43 +1,32 @@
-const express = require('express');
-const app = express();
-require('dotenv').config(); 
+const express = require('express')
+const cors    = require('cors')
+const path    = require('path')
+const app     = express()
+require('dotenv').config()
 
-// Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(cors({
+  origin: process.env.CLIENT_URL || 'http://localhost:3000',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+}))
 
-// Routes
-const authRoutes = require('./routes/auth');
-const trainRoutes = require('./routes/train');
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
-app.use('/api', authRoutes);
-app.use('/api/train', trainRoutes);
+// ── Serve uploaded images statically ────────────────────────────
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
-// Root endpoint
-app.get('/', (req, res) => {
-    res.json({
-        success: true,
-        message: 'Train Management API is running',
-        version: '1.0.0',
-        endpoints: {
-            auth: ['POST /api/register', 'POST /api/login', 'POST /api/logout'],
-            train: [
-                'POST   /api/train',
-                'GET    /api/train',
-                'GET    /api/train/:id',
-                'PUT    /api/train/:id',
-                'DELETE /api/train/:id'
-            ]
-        }
-    });
-});
+const authRoutes  = require('./routes/auth')
+const trainRoutes = require('./routes/train')
+const userRoutes  = require('./routes/users')
 
-// 404
-app.use((req, res) => {
-    res.status(404).json({ success: false, message: 'Route not found' });
-});
+app.use('/api', authRoutes)
+app.use('/api/train', trainRoutes)
+app.use('/api/users', userRoutes)
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-});
+app.get('/', (req, res) => res.json({ success: true, message: 'RailManager API v2.0' }))
+app.use((req, res) => res.status(404).json({ success: false, message: 'Route not found' }))
+
+const PORT = process.env.PORT || 5000
+app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`))
