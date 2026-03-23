@@ -8,8 +8,8 @@ This project is the **backend API** for the RailManager system. It handles data 
 
 ### Step 1: Clone the Repository
 ```bash
-git clone https://github.com/jesselzapanta09/railmanager-api.git
-cd railmanager-api
+git clone https://github.com/jesselzapanta09/railmanager-backend-api.git
+cd railmanager-backend-api
 ```
 
 ### Step 2: Install Dependencies
