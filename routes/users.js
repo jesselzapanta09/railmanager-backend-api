@@ -18,7 +18,7 @@ router.get('/', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const [users] = await db.query(
       `SELECT id, username, email, role, avatar, email_verified_at, created_at
-       FROM users WHERE id != ? ORDER BY created_at DESC`,
+       FROM users WHERE id != ? ORDER BY id DESC`,
       [req.user.id]
     )
     res.status(200).json({ success: true, count: users.length, data: users })
@@ -63,7 +63,7 @@ router.post('/', authenticateToken, requireAdmin, uploadAvatar.single('avatar'),
 
     const [result] = await db.query(
       `INSERT INTO users (username, email, password, role, avatar, email_verified_at)
-       VALUES (?, ?, ?, ?, ?, NOW())`,
+       VALUES (?, ?, ?, ?, ?, null)`,
       [username, email, hashed, role, avatarUrl]
     )
     res.status(201).json({

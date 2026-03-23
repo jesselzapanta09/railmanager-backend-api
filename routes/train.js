@@ -9,7 +9,7 @@ const { uploadTrain } = require('../utils/upload')
 // GET /api/train
 router.get('/', authenticateToken, async (req, res) => {
     try {
-        const [trains] = await db.query('SELECT * FROM trains ORDER BY created_at DESC')
+        const [trains] = await db.query('SELECT * FROM trains ORDER BY id DESC')
         res.status(200).json({ success: true, count: trains.length, data: trains })
     } catch (err) {
         res.status(500).json({ success: false, message: 'Server error', error: err.message })

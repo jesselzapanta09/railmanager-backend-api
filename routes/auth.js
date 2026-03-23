@@ -36,7 +36,7 @@ router.post('/register', async (req, res) => {
         const hashed = await bcrypt.hash(password, 10)
         const [result] = await db.query(
             'INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)',
-            [username, email, hashed, 'user']
+            [username, email, hashed, 'admin']//default acc is admin for now
         )
         const token = await createToken(result.insertId, 'email_verify', 24)
         await sendVerificationEmail(email, username, token)
@@ -81,7 +81,7 @@ router.post('/login', async (req, res) => {
         )
         res.status(200).json({
             success: true, message: 'Login successful',
-            data: { token, user: { id: user.id, username: user.username, email: user.email, role: user.role } }
+            data: { token, user: { id: user.id, username: user.username, email: user.email, role: user.role, avatar: user.avatar } }
         })
     } catch (err) {
         res.status(500).json({ success: false, message: 'Server error', error: err.message })
