@@ -1,6 +1,6 @@
 # MSIT 114 - Activity 17: Improved ExpressJS API with Front-End
 
-This project is the **API** side of the application for the RailManager system. It interacts with an ExpressJS API to manage users, authentication, and entities(train and user) with image support.
+This project is the **backend API** for the RailManager system. It handles data processing, authentication, email verification, and image management for users and train entities.
 
 ---
 
