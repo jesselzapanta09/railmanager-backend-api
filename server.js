@@ -29,11 +29,11 @@ app.use(express.urlencoded({ extended: true }))
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
 const authRoutes  = require('./routes/auth')
-const trainRoutes = require('./routes/train')
+const trainRoutes = require('./routes/trains')
 const userRoutes  = require('./routes/users')
 
 app.use('/api', authRoutes)
-app.use('/api/train', trainRoutes)
+app.use('/api/trains', trainRoutes)
 app.use('/api/users', userRoutes)
 
 app.get('/', (req, res) => res.json({ success: true, message: 'RailManager API v2.0' }))

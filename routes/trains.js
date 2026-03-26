@@ -6,7 +6,7 @@ const db = require('../config/database')
 const { authenticateToken, requireAdmin } = require('../middleware/auth')
 const { uploadTrain } = require('../utils/upload')
 
-// GET /api/train
+// GET /api/trains
 router.get('/', authenticateToken, async (req, res) => {
     try {
         const [trains] = await db.query('SELECT * FROM trains ORDER BY id DESC')
@@ -16,7 +16,7 @@ router.get('/', authenticateToken, async (req, res) => {
     }
 })
 
-// GET /api/train/:id
+// GET /api/trains/:id
 router.get('/:id', authenticateToken, async (req, res) => {
     try {
         const [trains] = await db.query('SELECT * FROM trains WHERE id = ?', [req.params.id])
@@ -28,7 +28,7 @@ router.get('/:id', authenticateToken, async (req, res) => {
     }
 })
 
-// POST /api/train (admin only)
+// POST /api/trains (admin only)
 router.post('/', authenticateToken, requireAdmin, uploadTrain.single('image'), async (req, res) => {
     const { train_name, price, route } = req.body
     if (!train_name || !price || !route)
@@ -49,7 +49,7 @@ router.post('/', authenticateToken, requireAdmin, uploadTrain.single('image'), a
     }
 })
 
-// PUT /api/train/:id (admin only)
+// PUT /api/trains/:id (admin only)
 router.put('/:id', authenticateToken, requireAdmin, uploadTrain.single('image'), async (req, res) => {
     const { train_name, price, route } = req.body
     if (!train_name || !price || !route)
@@ -82,7 +82,7 @@ router.put('/:id', authenticateToken, requireAdmin, uploadTrain.single('image'),
     }
 })
 
-// DELETE /api/train/:id (admin only)
+// DELETE /api/trains/:id (admin only)
 router.delete('/:id', authenticateToken, requireAdmin, async (req, res) => {
     try {
         const [existing] = await db.query('SELECT * FROM trains WHERE id = ?', [req.params.id])
