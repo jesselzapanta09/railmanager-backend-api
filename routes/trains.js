@@ -67,6 +67,12 @@ router.put('/:id', authenticateToken, requireAdmin, uploadTrain.single('image'),
                 if (fs.existsSync(old)) fs.unlinkSync(old)
             }
             imageUrl = `/uploads/trains/${req.file.filename}`
+        } else if (req.body.remove_image === 'true') {
+            if (imageUrl) {
+                const old = path.join(__dirname, '..', imageUrl)
+                if (fs.existsSync(old)) fs.unlinkSync(old)
+            }
+            imageUrl = null
         }
 
         await db.query(
