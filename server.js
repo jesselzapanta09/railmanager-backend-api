@@ -31,6 +31,9 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 const authRoutes  = require('./routes/auth')
 const trainRoutes = require('./routes/trains')
 const userRoutes  = require('./routes/users')
+const aboutRoutes  = require('./routes/about')
+
+app.use('/api/about', aboutRoutes);
 
 app.use('/api', authRoutes)
 app.use('/api/trains', trainRoutes)
