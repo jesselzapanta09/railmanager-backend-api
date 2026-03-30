@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 23, 2026 at 02:11 PM
+-- Generation Time: Mar 30, 2026 at 02:56 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -104,7 +104,8 @@ INSERT INTO `token_blacklist` (`id`, `token`, `created_at`) VALUES
 (64, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjgsInVzZXJuYW1lIjoiSnVhbiBEZWxhIENydXoiLCJlbWFpbCI6Imp1YW5kZWxhY3J1ejlAZ21haWwuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzc0MjY5NTU5LCJleHAiOjE3NzQzNTU5NTl9.EBxtMrFeNVRB9iHCEUdLbTLGH6Nw_0OBxx2v83KQwfU', '2026-03-23 12:39:55'),
 (65, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjgsInVzZXJuYW1lIjoiSnVhbiBEZWxhIENydXoiLCJlbWFpbCI6Imp1YW5kZWxhY3J1ejlAZ21haWwuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzc0MjY5NjEyLCJleHAiOjE3NzQzNTYwMTJ9.cF9UMSBGOz6_zI_fXKvzvk2mEKyCB-Jt4HKXd36qDcs', '2026-03-23 12:53:10'),
 (66, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzEsInVzZXJuYW1lIjoiUmFpZGVuIFNob2d1biIsImVtYWlsIjoicmFpZGVuc2hvZ3VuQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3NDI3MDQwOCwiZXhwIjoxNzc0MzU2ODA4fQ.HVpX7H-uqLANXki81DiJBTul8oeqq7yJUik8yLt2FU8', '2026-03-23 12:53:49'),
-(67, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzIsInVzZXJuYW1lIjoiRXJlbiBZZWFnZXIiLCJlbWFpbCI6ImVyZW55ZWFnZXJAZ21haWwuY29tIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3NzQyNzA0NTQsImV4cCI6MTc3NDM1Njg1NH0.KSd5hGW_AyELcIBasmhLB_KKNxz_JFWIErdLHpDYwbA', '2026-03-23 12:54:42');
+(67, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzIsInVzZXJuYW1lIjoiRXJlbiBZZWFnZXIiLCJlbWFpbCI6ImVyZW55ZWFnZXJAZ21haWwuY29tIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3NzQyNzA0NTQsImV4cCI6MTc3NDM1Njg1NH0.KSd5hGW_AyELcIBasmhLB_KKNxz_JFWIErdLHpDYwbA', '2026-03-23 12:54:42'),
+(68, 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJKZXNzZWwgWmFwYW50YSIsImVtYWlsIjoiamVzc2VsemFwYW50YUBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NzQ3NTk0MjgsImV4cCI6MTc3NDg0NTgyOH0.1hqzokLeUY_sknaRJ8_ryLBUuThI6uV_itWmBXqZ3AA', '2026-03-30 00:39:08');
 
 -- --------------------------------------------------------
 
@@ -166,7 +167,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `email`, `password`, `role`, `avatar`, `email_verified_at`, `created_at`) VALUES
-(1, 'Jessel Zapanta', 'jesselzapanta@gmail.com', '$2b$10$zb5.7jUvR39pgOqILkodouhXa9aeP3ZB1RNMeXuN/JjZvNHUa9Ir6', 'admin', '/uploads/avatars/avatar-1774092512921.jpg', '2026-03-22 08:13:48', '2026-03-16 13:56:58'),
+(1, 'Jessel Zapanta', 'jesselzapanta@gmail.com', '$2b$10$zb5.7jUvR39pgOqILkodouhXa9aeP3ZB1RNMeXuN/JjZvNHUa9Ir6', 'admin', '/uploads/avatars/avatar-1774791747009.jpg', '2026-03-22 08:13:48', '2026-03-16 13:56:58'),
 (3, 'jesselzapanta09', 'jesselzapanta09@gmail.com', '$2b$10$OUf9vBUPpl.TUIZKvV4GEOGoTVIyMbSJa.YeH.fEL5slSAPhjqPPS', 'user', '/uploads/avatars/avatar-1774265341394.png', NULL, '2026-03-17 08:07:19'),
 (28, 'Juan Dela Cruz', 'juandelacruz9@gmail.com', '$2b$10$BSJLo5vdyDVuovqdOuCdYOwsRC7TXWFhDiPxbxGw7cH8XBFwR.Uke', 'admin', '/uploads/avatars/avatar-1774269433539.jpg', '2026-03-23 12:39:09', '2026-03-23 12:31:24'),
 (30, 'John Doe', 'johndoe@gmail.com', '$2b$10$x10Uji5HF2qNJn9N3f6v1u52Dt/p4RAu85zAgR0lUG/PgG7XgdZfO', 'admin', NULL, NULL, '2026-03-23 12:41:37'),
@@ -229,7 +230,7 @@ ALTER TABLE `user_tokens`
 -- AUTO_INCREMENT for table `token_blacklist`
 --
 ALTER TABLE `token_blacklist`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
 
 --
 -- AUTO_INCREMENT for table `trains`
